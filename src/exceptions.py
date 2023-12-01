@@ -1,8 +1,5 @@
 import sys
-import logging
-
-# Setting up basic logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+from logger import logging
 
 def error_message_details(error, error_details: sys):
     """
@@ -41,19 +38,10 @@ class CustomException(Exception):
         String representation of the custom exception.
         """
         return self.error_message
-
-# def check_positive_number(number):
-#     """
-#     Raises an exception if the number is not positive.
-#     """
-#     if number < 0:
-#         raise ValueError("Number must be positive")
-
-# if __name__ == "__main__":
-#     try:
-#         # Test with a controlled scenario
-#         test_number = -1  # Change this to a positive number to avoid the exception
-#         check_positive_number(test_number)
-#     except Exception as e:
-#         logging.error("An error occurred")
-#         raise CustomException(e, sys)
+    
+if __name__ == '__main__':
+    try:
+        a = 1/0
+    except Exception as e:
+        logging.error('Divide by Zero')
+        raise CustomException(e, sys)
