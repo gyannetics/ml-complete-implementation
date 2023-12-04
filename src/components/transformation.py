@@ -11,6 +11,7 @@ from src.exceptions import CustomException
 from src.logger import logging
 from src.utils import save_object
 
+
 @dataclass
 class DataTransformationConfig:
     """
@@ -22,7 +23,8 @@ class DataTransformationConfig:
         numerical_columns (list): List of names of numerical columns.
         categorical_columns (list): List of names of categorical columns.
     """
-    preprocessor_obj_file_path: str = os.path.join('artifacts', 'preprocessor.pkl')
+    preprocessor_obj_file_path: str = os.path.join(
+        'artifacts', 'preprocessor.pkl')
     target_column_name: str = 'math_score'
     numerical_columns: list = None
     categorical_columns: list = None
@@ -35,6 +37,7 @@ class DataTransformationConfig:
                 'gender', 'race_ethnicity', 'parental_level_of_education', 'lunch', 'test_preparation_course'
             ]
 
+
 class DataTransformation:
     """
     Class for handling the data transformation process in a machine learning pipeline.
@@ -42,6 +45,7 @@ class DataTransformation:
     Attributes:
         config (DataTransformationConfig): Configuration instance for data transformation.
     """
+
     def __init__(self):
         self.config = DataTransformationConfig()
 
@@ -95,7 +99,8 @@ class DataTransformation:
         """
         try:
             if not os.path.exists(train_path) or not os.path.exists(test_path):
-                raise FileNotFoundError(f"Data file not found: {train_path} or {test_path}")
+                raise FileNotFoundError(
+                    f"Data file not found: {train_path} or {test_path}")
 
             train_df = pd.read_csv(train_path)
             test_df = pd.read_csv(test_path)
@@ -111,18 +116,24 @@ class DataTransformation:
                 columns=[self.config.target_column_name], axis=1)
             target_feature_test_df = test_df[self.config.target_column_name]
 
-            logging.info("Applying preprocessing pipeline to training and testing data.")
-            input_feature_train_arr = preprocessing_obj.fit_transform(input_feature_train_df)
-            input_feature_test_arr = preprocessing_obj.transform(input_feature_test_df)
+            logging.info(
+                "Applying preprocessing pipeline to training and testing data.")
+            input_feature_train_arr = preprocessing_obj.fit_transform(
+                input_feature_train_df)
+            input_feature_test_arr = preprocessing_obj.transform(
+                input_feature_test_df)
 
-            train_arr = np.c_[input_feature_train_arr, np.array(target_feature_train_df)]
-            test_arr = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
+            train_arr = np.c_[input_feature_train_arr,
+                              np.array(target_feature_train_df)]
+            test_arr = np.c_[input_feature_test_arr,
+                             np.array(target_feature_test_df)]
 
             save_object(
                 file_path=self.config.preprocessor_obj_file_path,
                 obj=preprocessing_obj
             )
-            logging.info("Preprocessing object saved and data transformation completed.")
+            logging.info(
+                "Preprocessing object saved and data transformation completed.")
 
             return (
                 train_arr,
