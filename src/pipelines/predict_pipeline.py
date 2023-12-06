@@ -3,7 +3,6 @@ from pandas import DataFrame
 from src.exceptions import CustomException
 from src.utils import load_object
 import os
-from src.logger import logging
 
 
 class PredictPipeline:
@@ -71,7 +70,6 @@ class CustomData:
                 "reading_score": [self.reading_score],
                 "writing_score": [self.writing_score],
             }
-            logging.info("Prediction done!")
             return DataFrame(custom_data_input_dict)
 
         except Exception as e:
