@@ -71,7 +71,7 @@ class CustomData:
                 "reading_score": [self.reading_score],
                 "writing_score": [self.writing_score],
             }
-
+            logging.info("Prediction done!")
             return DataFrame(custom_data_input_dict)
 
         except Exception as e:
