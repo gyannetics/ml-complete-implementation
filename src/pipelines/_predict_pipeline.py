@@ -5,23 +5,50 @@ from src.utils import load_object
 import os
 from src.logger import logging
 
+
 class PredictPipeline:
-    def __init__(self):
-        pass
-    
-    def predict(self, features):
+    """
+    Class responsible for loading a trained model and a preprocessor, and using them to make predictions.
+
+    Methods:
+        predict(features): Takes input features and returns the model's predictions.
+    """
+
+    def __init__(self) -> None:
+        """
+        Initializes the PredictPipeline instance.
+        """
+        self.model_path = os.path.join("artifacts", "model.pkl")
+        self.preprocessor_path = os.path.join('artifacts', 'preprocessor.pkl')
+
+    def predict(self, features: DataFrame):
+        """
+        Predicts the target variable based on input features using the pre-trained model.
+
+        Args:
+            features (pd.DataFrame): The input features for prediction.
+
+        Returns:
+            The prediction results from the model.
+
+        Raises:
+            CustomException: For handling exceptions during the prediction process.
+        """
         try:
-            model_path = 'artifacts\model.pkl'
-            preprocessor_path = 'artifacts\preprocessor.pkl'
-            model = load_object(file_path=model_path)
-            preprocessor = load_object(file_path=preprocessor_path)
+            logging.info("@Predict_Pipeline: Loading model and preprocessor")
+            model = load_object(file_path=self.model_path)
+            preprocessor = load_object(file_path=self.preprocessor_path)
+            logging.info(
+                "@Predict_Pipeline: Model and preprocessor loaded successfully")
+
             data_scaled = preprocessor.transform(features)
             preds = model.predict(data_scaled)
             return preds
-        
+
         except Exception as e:
             raise CustomException(e, sys)
-        
+
+
 class CustomData:
     """
     A class to encapsulate input data for prediction.
@@ -54,7 +81,7 @@ class CustomData:
         Converts the instance data into a pandas DataFrame for prediction.
 
         Returns:
-            DataFrame: Pandas DataFrame containing the data from the instance.
+            pd.DataFrame: DataFrame containing the data from the instance.
 
         Raises:
             CustomException: For handling exceptions during DataFrame creation.
