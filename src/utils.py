@@ -5,21 +5,30 @@ import pandas as pd
 import dill
 import time
 from tqdm import tqdm
-import pickle
 from sklearn.metrics import r2_score
 from sklearn.model_selection import GridSearchCV
 from src.exceptions import CustomException
 from typing import Dict, Any
 from src.logger import logging
 
+
 def save_object(file_path, obj):
+    """
+    Save a Python object to a file using dill.
+
+    Args:
+        file_path (str): The path to the file where the object should be saved.
+        obj: The Python object to save.
+
+    Raises:
+        CustomException: For handling exceptions that occur during object saving.
+    """
     try:
         dir_path = os.path.dirname(file_path)
-
         os.makedirs(dir_path, exist_ok=True)
 
         with open(file_path, "wb") as file_obj:
-            pickle.dump(obj, file_obj)
+            dill.dump(obj, file_obj)
 
     except Exception as e:
         raise CustomException(e, sys)
@@ -70,10 +79,34 @@ def evaluate_models(X_train, y_train, X_test, y_test, models: Dict[str, Any], pa
                 'training_time': training_time,  # Add training time to the report
                 'best_estimator': best_model
             }
-            tqdm.write(f"Completed training {model_name}. Time taken: {training_time:.2f} seconds")  # Display current model name
-            logging.info(f"Completed training {model_name}. Time taken: {training_time:.2f} seconds")
+            # Display current model name
+            tqdm.write(
+                f"Completed training {model_name}. Time taken: {training_time:.2f} seconds")
+            logging.info(
+                f"Completed training {model_name}. Time taken: {training_time:.2f} seconds")
 
         return report
+
+    except Exception as e:
+        raise CustomException(e, sys)
+
+
+def load_object(file_path):
+    """
+    Load a Python object from a file using dill.
+
+    Args:
+        file_path (str): The path to the file from which to load the object.
+
+    Returns:
+        The Python object loaded from the file.
+
+    Raises:
+        CustomException: For handling exceptions that occur during object loading.
+    """
+    try:
+        with open(file_path, "rb") as file_obj:
+            return dill.load(file_obj)
 
     except Exception as e:
         raise CustomException(e, sys)

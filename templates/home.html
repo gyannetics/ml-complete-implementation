@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Exam Performance Predictor</title>
+    <!-- <link rel="stylesheet" href="css\styles.css"> -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+        h1, legend {
+            text-align: center;
+            color: #333;
+        }
+        .form-label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .results-stamp {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-10deg);
+            background-color: rgba(0, 0, 0, 0.1);
+            color: #d32f2f;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: 2px solid #d32f2f;
+            text-align: center;
+            z-index: 10;
+            width: 1.75in;
+            height: 0.5in;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+            font-weight: bold;
+        }
+        .btn-clear {
+            background-color: #dc3545;
+            margin-top: 10px;
+        }
+    </style>        
+</head>
+<body>
+    <div class="login">
+        <h1>Student Exam Performance Predictor</h1>
+        <form id="predictionForm" action="{{ url_for('predict_data')}}" method="post">
+            <legend>Enter Student Details</legend>
+
+            <!-- Gender Selection -->
+            <div class="mb-3">
+                <label class="form-label">Gender</label>
+                <select class="form-control" name="gender" required>
+                    <option selected disabled value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+
+            <!-- Race or Ethnicity -->
+            <div class="mb-3">
+                <label class="form-label">Race or Ethnicity</label>
+                <select class="form-control" name="ethnicity" required>
+                    <option selected disabled value="">Select Ethnicity</option>
+                    <option value="group A">Group A</option>
+                    <option value="group B">Group B</option>
+                    <option value="group C">Group C</option>
+                    <option value="group D">Group D</option>
+                    <option value="group E">Group E</option>
+                </select>
+            </div>
+
+            <!-- Parental Level of Education -->
+            <div class="mb-3">
+                <label class="form-label">Parental Level of Education</label>
+                <select class="form-control" name="parental_level_of_education" required>
+                    <option selected disabled value="">Select Parent Education</option>
+                    <option value="associate's degree">associate's degree</option>
+                    <option value="bachelor's degree">bachelor's degree</option>
+                    <option value="high school">high school</option>
+                    <option value="master's degree">master's degree</option>
+                    <option value="some college">some college</option>
+                    <option value="some high school">some high school</option>
+                </select>
+            </div>
+
+            <!-- Lunch Type -->
+            <div class="mb-3">
+                <label class="form-label">Lunch Type</label>
+                <select class="form-control" name="lunch" required>
+                    <option selected disabled value="">Select Lunch Type</option>
+                    <option value="free/reduced">free/reduced</option>
+                    <option value="standard">standard</option>
+                </select>
+            </div>
+
+            <!-- Test Preparation Course -->
+            <div class="mb-3">
+                <label class="form-label">Test Preparation Course</label>
+                <select class="form-control" name="test_preparation_course" required>
+                    <option selected disabled value="">Select Course Status</option>
+                    <option value="none">None</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+
+            <!-- Writing Score -->
+            <div class="mb-3">
+                <label class="form-label">Writing Score out of 100</label>
+                <input class="form-control" type="number" name="writing_score" placeholder="Enter your Writing score" min='0' max='100' />
+            </div>
+
+            <!-- Reading Score -->
+            <div class="mb-3">
+                <label class="form-label">Reading Score out of 100</label>
+                <input class="form-control" type="number" name="reading_score" placeholder="Enter your Reading Score" min='0' max='100' />
+            </div>
+
+            <!-- Submit Button -->
+            <input class="btn" type="submit" value="Predict your Maths Score" />
+            
+            <!-- Clear Button -->
+            <input class="btn btn-clear" type="button" value="Clear Form" onclick="clearForm()" />
+        </form>
+        <h2 class="results-stamp">
+            The Math Score is expected to be {{ results | safe }}
+        </h2>
+    </div>
+
+    <script>
+        function clearForm() {
+            document.getElementById("predictionForm").reset();
+            var resultsStamp = document.querySelector('.results-stamp');
+            if (resultsStamp) {
+                resultsStamp.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

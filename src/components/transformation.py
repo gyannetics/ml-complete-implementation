@@ -10,7 +10,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from src.exceptions import CustomException
 from src.logger import logging
 from src.utils import save_object
-
+from typing import Tuple
 
 @dataclass
 class DataTransformationConfig:
@@ -49,7 +49,7 @@ class DataTransformation:
     def __init__(self):
         self.config = DataTransformationConfig()
 
-    def get_data_transformer_object(self):
+    def get_data_transformer_object(self) -> ColumnTransformer:
         """
         Creates and returns a data transformation pipeline for preprocessing numerical and categorical data.
 
@@ -66,7 +66,7 @@ class DataTransformation:
             cat_pipeline = Pipeline(
                 steps=[
                     ('imputer', SimpleImputer(strategy='most_frequent')),
-                    ('one_hot_encoder', OneHotEncoder()),
+                    ('one_hot_encoder', OneHotEncoder(handle_unknown='ignore')),
                     ('scaler', StandardScaler(with_mean=False))
                 ]
             )
@@ -82,7 +82,7 @@ class DataTransformation:
         except Exception as e:
             raise CustomException(e, sys)
 
-    def initialize_data_transformation(self, train_path, test_path):
+    def initialize_data_transformation(self, train_path, test_path) -> Tuple:
         """
         Initializes and applies the data transformation on the provided training and testing datasets.
 
